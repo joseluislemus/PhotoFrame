@@ -6,15 +6,18 @@ Created on Tue Sep  7 08:26:45 2021
 """
 
 import glob 
-
+from datetime import datetime
 #global vars
-delay_seconds = 20
+delay_seconds = 10
 delay_seconds_min = 5
 delay_seconds_max = 1800
 
 photos_directory = "./PhotoFrame"
 allowed_photos_directory = glob.glob(photos_directory + '/**/', recursive = True)
 image_files = glob.glob(photos_directory + '/**/*.jpg', recursive = True)
+
+start_date = datetime.strptime('1970:01:01:00:00', '%Y:%m:%d:%H:%M')
+end_date = datetime.strptime('2050:01:01:00:00', '%Y:%m:%d:%H:%M')
 
 randomize = True
 
