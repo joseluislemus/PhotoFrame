@@ -15,7 +15,8 @@ Created on Mon Sep  6 22:16:19 2021
 #app.layout = html.Div
 
 
-from flask import Flask,request
+from flask import Flask,request,render_template
+from datetime import datetime
 import globalVars as glb
 
 def run_webserver():
@@ -23,17 +24,81 @@ def run_webserver():
     
     @app.route("/")
     def home():
-        return "Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory)
-    
+
+        return render_template('index.html', title='Photoframe',
+                           content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory))
     
     
     @app.route("/params/")
     def get_params():
-        delay_seconds = request.args.get('period')
-        parameterDict = eval (params)
+        try:
+            parameterDict = eval(request.args.get('p'))
+        except:
+            parameterDict = None
+        
         if type(parameterDict)==dict:
-            if 
-        return "Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory)
-    
+            
+            #period
+            if 'period' in parameterDict:
+                try:
+                    new_delay_seconds = int(parameterDict['period'])
+                    if new_delay_seconds < glb.delay_seconds_min:
+                        glb.delay_seconds = glb.delay_seconds_min
+                    elif new_delay_seconds > glb.delay_seconds_max:
+                        glb.delay_seconds = glb.delay_seconds_max
+                    else:
+                        glb.delay_seconds = new_delay_seconds
+                except:
+                    pass
+            
+            #random
+            if 'random' in parameterDict:
+                if parameterDict['random'] == 1: glb.randomize = True
+                elif parameterDict['random'] == 0: glb.randomize = False
+
+            #startDate
+            if 'sdate' in parameterDict:
+                try:
+                    glb.start_date = datetime.strptime(parameterDict['sdate'], '%Y:%m:%d:%H:%M')
+                except:
+                    pass
+            
+            #endDate
+            if 'edate' in parameterDict:
+                try:
+                    glb.end_date = datetime.strptime(parameterDict['edate'], '%Y:%m:%d:%H:%M')
+                except:
+                    pass
+            
+            return render_template('index.html', title='Photoframe',
+                           content=parameterDict)
+        else:
+            return render_template('index.html', title='Photoframe',
+                           content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory))
    
     app.run(host="0.0.0.0",debug=True, use_reloader=False)
+    
+    
+    #    def get_ordered_sequences():
+#    try:
+#        partialSequence = ast.literal_eval(request.args.get('partialSequence'))
+#    except:
+#        partialSequence = None
+#    if partialSequence and type(partialSequence)==list:
+#        # looking for invalid elements
+#        for v in partialSequence:
+#            if not(v.startswith("(SEARCH) ")) and not(v.startswith("(FILTER) ")):
+#                if v not in all_options:
+#                    sequences = []
+#                    status = "Unnexpected element provided: '{}'. All valid elements can be accessed at /getInputOptions".format(v)
+#                    result = {'sequences':sequences, 'status':status}
+#                    return jsonify(result)
+#        # if everything is fine
+#        sequences = get_sequences(partialSequence)
+#        status = 'OK'
+#    else:
+#        sequences = []
+#        status = partialSequence
+##        status = 'Empty or invalid partialSequence.'
+#    result = {'sequences':sequences, 'status':status}
+#    return jsonify(result)
