@@ -97,18 +97,11 @@ class SlideShow(tk.Tk):
                 print('Slideshow: Directory changed, new directory is',glb.photos_directory)
                 break
             time.sleep(1)
-        print (self.exif_data)
+        
         self.after(20, self.show_slides)
         
 def run_photoframe():
-    if glb.delay_seconds == 0: 
-        glb.delay_seconds = 4
-    if glb.photos_directory == '': 
-        glb.photos_directory = "./PhotoFrame"
-    if glb.image_files=='':
-        glb.image_files = glob.glob(glb.photos_directory + '/**/*.jpg', recursive = True)
-    
-    if glb.randomize: random.shuffle(glb.image_files)
+
     
     photoframe_instance = SlideShow()
     photoframe_instance.show_slides()
