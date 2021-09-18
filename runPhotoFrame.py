@@ -9,10 +9,6 @@ import threading
 from webServer import run_webserver
 from photoFrame import run_photoframe
 
-
-
-#%%
-
 try: 
     photoFrame = threading.Thread(target = run_photoframe)
     photoFrame.start()
@@ -23,4 +19,4 @@ try:
     webServer = threading.Thread(target = run_webserver)
     webServer.start()
 except Exception as e:
-    print('Cannot run webServer: ',e)
+    print('Cannot run webServer: ', e)

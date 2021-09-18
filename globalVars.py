@@ -7,6 +7,10 @@ Created on Tue Sep  7 08:26:45 2021
 
 import glob 
 from datetime import datetime
+import pandas as pd
+from PIL import Image,ExifTags
+
+
 #global vars
 delay_seconds = 10
 delay_seconds_min = 5
@@ -19,26 +23,19 @@ image_files = glob.glob(photos_directory + '/**/*.jpg', recursive = True)
 start_date = datetime.strptime('1970:01:01:00:00', '%Y:%m:%d:%H:%M')
 end_date = datetime.strptime('2050:01:01:00:00', '%Y:%m:%d:%H:%M')
 
+next_image = ''
+current_image = ''
+
 randomize = True
 
 nav_next = False
 nav_previous = False
 
 
-#%%
-
-import pandas as pd
-import os
-from PIL import Image,ExifTags
-
-image_files = glob.glob(photos_directory + '/**/*.jpg', recursive = True)
-#image_file = "./PhotoFrame/2021/07-IMG20210727172215.jpg"
-
-image_df = pd.DataFrame(columns=['date','directory','filename','speed','aperture','iso','focallength','camera'])
+image_df = pd.DataFrame(columns=['date','filename','speed','aperture','iso','focallength','camera'])
 for image_file in image_files:
     image_dict = {}
-    image_dict['filename'] = os.path.basename(image_file)
-    image_dict['directory'] = os.path.dirname(image_file)
+    image_dict['filename'] = image_file
     image = Image.open(image_file)
     exif_data = {
                 ExifTags.TAGS[k]: v
@@ -59,3 +56,6 @@ for image_file in image_files:
     image_df=image_df.append(image_dict,ignore_index=True)
 
 image_df['date']=pd.to_datetime(image_df['date'], format='%Y:%m:%d %H:%M:%S')
+image_df=image_df.sort_values(by="date")
+
+filtered_df = image_df

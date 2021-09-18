@@ -24,13 +24,6 @@ def run_webserver():
     
     @app.route("/")
     def home():
-
-        return render_template('index.html', title='Photoframe',
-                           content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory))
-    
-    
-    @app.route("/params/")
-    def get_params():
         try:
             parameterDict = eval(request.args.get('p'))
         except:
@@ -69,12 +62,54 @@ def run_webserver():
                     glb.end_date = datetime.strptime(parameterDict['edate'], '%Y:%m:%d:%H:%M')
                 except:
                     pass
-            
-            return render_template('index.html', title='Photoframe',
-                           content=parameterDict)
-        else:
-            return render_template('index.html', title='Photoframe',
-                           content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory))
+        current_photo_dict = glb.image_df[glb.image_df.filename == glb.current_image].to_dict(orient='records')[0]
+        return render_template('index.html', 
+                               title='Photoframe',
+                               content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory),
+                               current_photo_info = current_photo_dict )
+    
+#    @app.route("/params/")
+#    def get_params():
+#        try:
+#            parameterDict = eval(request.args.get('p'))
+#        except:
+#            parameterDict = None
+#        
+#        if type(parameterDict)==dict:
+#            
+#            #period
+#            if 'period' in parameterDict:
+#                try:
+#                    new_delay_seconds = int(parameterDict['period'])
+#                    if new_delay_seconds < glb.delay_seconds_min:
+#                        glb.delay_seconds = glb.delay_seconds_min
+#                    elif new_delay_seconds > glb.delay_seconds_max:
+#                        glb.delay_seconds = glb.delay_seconds_max
+#                    else:
+#                        glb.delay_seconds = new_delay_seconds
+#                except:
+#                    pass
+#            
+#            #random
+#            if 'random' in parameterDict:
+#                if parameterDict['random'] == 1: glb.randomize = True
+#                elif parameterDict['random'] == 0: glb.randomize = False
+#
+#            #startDate
+#            if 'sdate' in parameterDict:
+#                try:
+#                    glb.start_date = datetime.strptime(parameterDict['sdate'], '%Y:%m:%d:%H:%M')
+#                except:
+#                    pass
+#            
+#            #endDate
+#            if 'edate' in parameterDict:
+#                try:
+#                    glb.end_date = datetime.strptime(parameterDict['edate'], '%Y:%m:%d:%H:%M')
+#                except:
+#                    pass
+#            
+
    
     app.run(host="0.0.0.0",debug=True, use_reloader=False)
     

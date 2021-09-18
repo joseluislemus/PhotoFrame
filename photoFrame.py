@@ -5,15 +5,9 @@ Created on Mon Sep  6 22:18:28 2021
 @author: Josel
 """
 import globalVars as glb
-from PIL import Image, ImageTk, ExifTags
-
-
-
-
-
+from PIL import Image, ImageTk 
 import tkinter as tk
 import random
-import glob
 import time
 import os
 
@@ -32,25 +26,24 @@ class SlideShow(tk.Tk):
         self.timenow = time.time()
         self.track_img_index = 0
         self.background = 'black'
-        self.pictures = glb.image_files  
-        self.photos_directory = glb.photos_directory
+        self.start_date = glb.start_date
+        self.end_date = glb.end_date
+        self.pictures = glb.filtered_df['filename'].tolist()
         self.picture_display = tk.Label(self)
         self.picture_display.pack(expand=True, fill="both")
         self.exif_data = {}
 
     def show_slides(self):
-
+        
         if self.track_img_index < len(self.pictures) :
             self.lastphototime = time.time()
             x = self.pictures[self.track_img_index]
+            glb.next_image = x
             if self.track_img_index == len(self.pictures) - 1:
                 self.track_img_index = 0
             else:
                 self.track_img_index +=1
             original_image = Image.open(x)
-#            original_exif_data = original_image._getexif()
-            
-
             original_width, original_height = original_image.size
             original_ratio = original_width / original_height
             
@@ -67,17 +60,11 @@ class SlideShow(tk.Tk):
 
             resized = original_image.resize(( self.display_width, self.display_height ),Image.ANTIALIAS)
             new_img = ImageTk.PhotoImage(resized)
-            self.picture_display.config(image=new_img, bg = self.background)
-            self.exif_data = {
-                    ExifTags.TAGS[k]: v
-                    for k, v in original_image._getexif().items()
-                    if k in ExifTags.TAGS
-                    }
-            
+            self.picture_display.config(image=new_img, bg = self.background)           
             self.picture_display.image = new_img
             self.title(os.path.basename(x))
-            
             self.after(0, self.check_params)
+            
             
     def check_params(self):
         while self.timenow - self.lastphototime < glb.delay_seconds:
@@ -85,24 +72,26 @@ class SlideShow(tk.Tk):
             
             if self.delay_seconds != glb.delay_seconds:
                 self.delay_seconds = glb.delay_seconds
-                print('Slideshow: Period change detected, new period is',glb.delay_seconds,'seconds.')
                 break
             
-            if self.photos_directory != glb.photos_directory:
-                self.photos_directory = glb.photos_directory
-                glb.image_files = glob.glob(glb.photos_directory + '/**/*.jpg', recursive = True)
+            if self.start_date != glb.start_date or self.end_date != glb.end_date:
+                self.start_date = glb.start_date
+                self.end_date = glb.end_date
+                glb.filtered_df=glb.image_df[(glb.image_df['date'] > glb.start_date) & (glb.image_df['date'] < glb.end_date)]
+                glb.image_files = glb.filtered_df['filename'].tolist()
                 if glb.randomize: random.shuffle(glb.image_files)
                 self.pictures = glb.image_files
                 self.track_img_index = 0
-                print('Slideshow: Directory changed, new directory is',glb.photos_directory)
                 break
+
             time.sleep(1)
         
         self.after(20, self.show_slides)
+        glb.current_image = glb.next_image
+        
         
 def run_photoframe():
 
-    
     photoframe_instance = SlideShow()
     photoframe_instance.show_slides()
     photoframe_instance.mainloop()

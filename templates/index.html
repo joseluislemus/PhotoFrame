@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="static/main.css">
+    </head>
+    <body>
+        <h1>{{ title }}</h1>
+        <a href="/">Refresh</a><br>
+        {{ content }}
+        <ul>
+        {% for parameter in current_photo_info: %}
+            <li><strong>{{parameter.upper()}}:</strong> {{ current_photo_info[parameter] }}</li>
+    	{% endfor %}
+    	</ul>
+    </body>
+</html>
