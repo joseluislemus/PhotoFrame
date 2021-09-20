@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Sep  7 08:26:45 2021
-
-@author: Josel
-"""
 
 import glob 
 from datetime import datetime
@@ -12,7 +7,7 @@ from PIL import Image,ExifTags
 
 
 #global vars
-delay_seconds = 10
+delay_seconds = 30
 delay_seconds_min = 5
 delay_seconds_max = 1800
 
@@ -26,7 +21,7 @@ end_date = datetime.strptime('2050:01:01:00:00', '%Y:%m:%d:%H:%M')
 next_image = ''
 current_image = ''
 
-randomize = True
+randomize = False
 
 nav_next = False
 nav_previous = False

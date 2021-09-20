@@ -1,19 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Sep  6 22:16:19 2021
-
-@author: Josel
-"""
-
-#import dash
-#import dash_core_components as dcc
-#import dash_html_components as html
-#from dash.dependencies import Input, Output
-#
-#app = dash.Dash(__name__)
-#
-#app.layout = html.Div
-
 
 from flask import Flask,request,render_template
 from datetime import datetime
@@ -24,10 +9,20 @@ def run_webserver():
     
     @app.route("/")
     def home():
+                   
+        try:
+            navigation = eval(request.args.get('nav'))
+            print (navigation)
+            if navigation == 'prev': glb.nav_previous=True
+            if navigation == 'next': glb.nav_next=True
+        except:
+            pass
+        
         try:
             parameterDict = eval(request.args.get('p'))
         except:
             parameterDict = None
+        
         
         if type(parameterDict)==dict:
             
@@ -62,7 +57,12 @@ def run_webserver():
                     glb.end_date = datetime.strptime(parameterDict['edate'], '%Y:%m:%d:%H:%M')
                 except:
                     pass
-        current_photo_dict = glb.image_df[glb.image_df.filename == glb.current_image].to_dict(orient='records')[0]
+                
+                
+        try:
+            current_photo_dict = glb.image_df[glb.image_df.filename == glb.current_image].to_dict(orient='records')[0]
+        except:
+            current_photo_dict = {}
         return render_template('index.html', 
                                title='Photoframe',
                                content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory),
