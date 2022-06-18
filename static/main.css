@@ -2,4 +2,19 @@ body {
   background-color: #222;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #ccc;
+  font-size: 3em;
+}
+a {
+  color:#ccc;
+  text-decoration: none;
+}
+.picture_param_name {
+  font-weight: bold;
+
+}
+.picture_param_value {
+  color:#cc7;
+}
+.nav {
+  font-size: 1.5em;
 }

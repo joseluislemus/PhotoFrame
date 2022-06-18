@@ -4,14 +4,24 @@
         <link rel="stylesheet" href="static/main.css">
     </head>
     <body>
-        <h1>{{ title }}</h1>
-        <a href="/?nav='prev'">Previous</a> <a href="/?nav='next'">Next</a><br>
-        <a href="/">Refresh</a><br>
-        {{ content }}
+        <span class="nav" ><a href="/?nav='prev'"> &lt; Previous</a> | <a href="/">Refresh</a> | <a href="/?nav='next'">Next &gt;</a></span><br>
+        <br>
+        Period: <span class="picture_param_value">{{ current_settings_dict['Period'] }}s</span>.<br>
+        Root directory: <span class="picture_param_value">{{ current_settings_dict['Directory'] }}</span>. <br>
+        Random: <a class="picture_param_value" href="/?p={'random':{{ not current_settings_dict['Random'] }}}">{{ current_settings_dict['Random'] }}</a>
         <ul>
+            <li><span class="picture_param_name">File name:</span><br> <span class="picture_param_value">&nbsp;&nbsp;{{current_photo_info['filename'][current_settings_dict['Directory']|length :]}}</span></li>
+            <li><span class="picture_param_name">Date taken:</span> <span class="picture_param_value">{{current_photo_info['date']}}</span></li>
+            <li><span class="picture_param_name">Speed:</span> <span class="picture_param_value">{{current_photo_info['speed']}}</span></li>
+            <li><span class="picture_param_name">Aperture:</span> <span class="picture_param_value">{{current_photo_info['aperture']}}</span></li>
+            <li><span class="picture_param_name">ISO:</span> <span class="picture_param_value">{{current_photo_info['iso']}}</span></li>
+            <li><span class="picture_param_name">Focal length:</span> <span class="picture_param_value">{{current_photo_info['focallength']}}</span></li>
+            <li><span class="picture_param_name">Device:</span> <span class="picture_param_value">{{current_photo_info['camera']}}</span></li>
+        </ul>
+        <!--<ul>
         {% for parameter in current_photo_info: %}
-            <li><strong>{{parameter.upper()}}:</strong> {{ current_photo_info[parameter] }}</li>
+            <li><span class="picture_param_name">{{parameter}}:</span> <span class="picture_param_value">{{ current_photo_info[parameter] }}</span> </li>
     	{% endfor %}
-    	</ul>
+    	</ul>-->
     </body>
 </html>

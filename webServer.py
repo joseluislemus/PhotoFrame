@@ -63,8 +63,17 @@ def run_webserver():
             current_photo_dict = glb.image_df[glb.image_df.filename == glb.current_image].to_dict(orient='records')[0]
         except:
             current_photo_dict = {}
+        try:
+            current_settings_dict = {'Period': glb.delay_seconds ,
+                                     'Directory':glb.photos_directory,
+                                     'Random': glb.randomize}
+        except:
+            current_settings_dict = {'Period': 'Unknown',
+                                     'Directory': 'Unknown',
+                                     'Random': 'Unknown'}
         return render_template('index.html', 
                                title='Photoframe',
+                               current_settings_dict = current_settings_dict,
                                content="Setting: Period: " + str(glb.delay_seconds) + " sec, directory: " + str(glb.photos_directory),
                                current_photo_info = current_photo_dict )
     
