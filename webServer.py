@@ -25,7 +25,7 @@ def run_webserver():
         
         
         if type(parameterDict)==dict:
-            
+            print(parameterDict)
             #period
             if 'period' in parameterDict:
                 try:

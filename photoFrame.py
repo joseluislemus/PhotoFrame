@@ -24,6 +24,7 @@ class SlideShow(tk.Tk):
         self.background = 'black'
         self.start_date = glb.start_date
         self.end_date = glb.end_date
+        self.randomize = False
         self.pictures = glb.filtered_df['filename'].tolist()
         self.picture_display = tk.Label(self)
         self.picture_display.pack(expand=True, fill="both")
@@ -51,9 +52,13 @@ class SlideShow(tk.Tk):
                 self.delay_seconds = glb.delay_seconds
                 break
             
-            if self.start_date != glb.start_date or self.end_date != glb.end_date:
+            if self.start_date != glb.start_date or \
+               self.end_date != glb.end_date or \
+               self.randomize != glb.randomize:
+                
                 self.start_date = glb.start_date
                 self.end_date = glb.end_date
+                self.randomize = glb.randomize
                 glb.filtered_df = glb.image_df[(glb.image_df['date'] > glb.start_date) & (glb.image_df['date'] < glb.end_date)]
                 glb.image_files = glb.filtered_df['filename'].tolist()
                 if glb.randomize: random.shuffle(glb.image_files)
@@ -97,8 +102,7 @@ class SlideShow(tk.Tk):
 
         self.after(100,self.show_slides)
 
-        
-        
+
 def run_photoframe():
 
     photoframe_instance = SlideShow()
