@@ -11,7 +11,7 @@ delay_seconds = 300
 delay_seconds_min = 5
 delay_seconds_max = 1800
 
-photos_directory = "./photos"
+photos_directory = "../photos"
 allowed_photos_directory = glob.glob(photos_directory + '/**/', recursive = True)
 image_files = glob.glob(photos_directory + '/**/*.jpg', recursive = True)
 
