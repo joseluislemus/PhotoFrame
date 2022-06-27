@@ -5,13 +5,17 @@ from datetime import datetime
 import pandas as pd
 from PIL import Image,ExifTags
 from fractions import Fraction
+import configparser
 
-#global vars
-delay_seconds = 300
-delay_seconds_min = 5
-delay_seconds_max = 1800
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-photos_directory = "../photos"
+photos_directory = config['DEFAULT']['photos_directory']
+delay_seconds = eval(config['DEFAULT']['delay_seconds'])
+delay_seconds_min = eval(config['DEFAULT']['delay_seconds_min'])
+delay_seconds_max = eval(config['DEFAULT']['delay_seconds_max'])
+randomize = eval(config['DEFAULT']['randomize'])
+
 allowed_photos_directory = glob.glob(photos_directory + '/**/', recursive = True)
 image_files = glob.glob(photos_directory + '/**/*.jpg', recursive = True)
 
@@ -20,8 +24,6 @@ end_date = datetime.strptime('2050:01:01:00:00', '%Y:%m:%d:%H:%M')
 
 next_image = ''
 current_image = ''
-
-randomize = True
 
 nav_next = False
 nav_previous = False

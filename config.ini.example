@@ -1,0 +1,7 @@
+[DEFAULT]
+photos_directory = ../photos
+delay_seconds = 300
+delay_seconds_min = 5
+delay_seconds_max = 1800
+randomize = True
+#Rename as 'config.ini' before using
